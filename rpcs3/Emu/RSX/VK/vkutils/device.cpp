@@ -704,8 +704,9 @@ namespace vk
 		device.pEnabledFeatures = &enabled_features;
 
 		VkPhysicalDeviceVulkan12Features vulkan12_features{ .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES };
-		vulkan12_features.runtimeDescriptorArray = VK_TRUE;
-		vulkan12_features.uniformBufferStandardLayout = VK_TRUE;
+		// runtimeDescriptorArray is not supported on older Intel iGPUs → disable
+		vulkan12_features.runtimeDescriptorArray = VK_FALSE;
+		vulkan12_features.uniformBufferStandardLayout = VK_TRUE;   // this is supported (your report shows 1)
 		vulkan12_features.pNext = const_cast<void*>(device.pNext);
 		device.pNext = &vulkan12_features;
 
@@ -734,11 +735,11 @@ namespace vk
 		}
 
 		// FIXME: Fall back to something. Idk how that would even work though, this really is a hard requirement
-		VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT ubo_unsized_array_feature{};
-		ubo_unsized_array_feature.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT;
-		ubo_unsized_array_feature.shaderUniformBufferUnsizedArray = VK_TRUE;
-		ubo_unsized_array_feature.pNext = const_cast<void*>(device.pNext);
-		device.pNext = &ubo_unsized_array_feature;
+		//VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT ubo_unsized_array_feature{};
+		//ubo_unsized_array_feature.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT;
+		//ubo_unsized_array_feature.shaderUniformBufferUnsizedArray = VK_TRUE;
+		//ubo_unsized_array_feature.pNext = const_cast<void*>(device.pNext);
+		//device.pNext = &ubo_unsized_array_feature;
 
 		VkPhysicalDeviceCustomBorderColorFeaturesEXT custom_border_color_features{};
 		if (pgpu->custom_border_color_support)
